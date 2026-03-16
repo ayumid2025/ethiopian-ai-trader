@@ -3,46 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Stock Trader (1000 ETB)</title>
+    <title>🤖 AI Stock Trader (1000 ETB)</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🤖 AI Stock Trader</h1>
+        <h1>🤖 Autonomous AI Stock Trader</h1>
+        <p class="subtitle">Starting capital: 1000 ETB | Buys when price < 20‑SMA | Sells at +5% profit</p>
+
+        <!-- Balance Section -->
         <div class="balance">
-            <p>Cash: <span id="cash">1000.00</span> ETB</p>
-            <p>Portfolio Value: <span id="portfolioValue">0.00</span> ETB</p>
-            <p>Total Equity: <span id="totalEquity">1000.00</span> ETB</p>
+            <div class="card">
+                <h3>Cash</h3>
+                <span id="cash">1000.00</span> ETB
+            </div>
+            <div class="card">
+                <h3>Portfolio Value</h3>
+                <span id="portfolioValue">0.00</span> ETB
+            </div>
+            <div class="card">
+                <h3>Total Equity</h3>
+                <span id="totalEquity">1000.00</span> ETB
+            </div>
         </div>
 
+        <!-- Market Data -->
         <div class="market">
-            <h2>Market (SIMULATED)</h2>
-            <p>Current Price: <span id="price">0.00</span> ETB</p>
-            <p>20‑SMA: <span id="sma">0.00</span> ETB</p>
-            <p>Signal: <span id="signal">WAITING</span></p>
+            <h2>📈 Market (SIMULATED)</h2>
+            <div class="market-row">
+                <span>Current Price:</span>
+                <strong><span id="price">0.00</span> ETB</strong>
+            </div>
+            <div class="market-row">
+                <span>20‑Period SMA:</span>
+                <strong><span id="sma">0.00</span> ETB</strong>
+            </div>
+            <div class="market-row">
+                <span>Signal:</span>
+                <strong><span id="signal">WAITING</span></strong>
+            </div>
         </div>
 
+        <!-- Holdings Table -->
         <div class="holdings">
-            <h2>Holdings</h2>
-            <table id="holdingsTable">
+            <h2>📊 Current Holdings</h2>
+            <table>
                 <thead>
-                    <tr><th>Stock</th><th>Qty</th><th>Buy Price</th><th>Current Value</th><th>Profit %</th></tr>
+                    <tr>
+                        <th>Stock</th>
+                        <th>Quantity</th>
+                        <th>Buy Price (ETB)</th>
+                        <th>Current Value (ETB)</th>
+                        <th>Profit %</th>
+                    </tr>
                 </thead>
-                <tbody id="holdingsBody"></tbody>
+                <tbody id="holdingsBody">
+                    <!-- filled by JavaScript -->
+                </tbody>
             </table>
         </div>
 
+        <!-- Transaction Log -->
         <div class="log">
-            <h2>Transaction Log</h2>
+            <h2>📜 Transaction Log</h2>
             <div id="logContainer"></div>
         </div>
 
+        <!-- Control Buttons -->
         <div class="controls">
-            <button id="startBtn">▶ Start Bot</button>
-            <button id="stopBtn">⏸ Stop Bot</button>
-            <button id="resetBtn">⟲ Reset to 1000 ETB</button>
+            <button id="startBtn" class="btn start">▶ Start Bot</button>
+            <button id="stopBtn" class="btn stop">⏸ Stop Bot</button>
+            <button id="resetBtn" class="btn reset">⟲ Reset to 1000 ETB</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
