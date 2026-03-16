@@ -456,7 +456,10 @@
     [bankSelect, accountNumber, accountHolder].forEach(el => {
         el.addEventListener('change', saveState);
     });
-
+document.getElementById('refreshBtn').addEventListener('click', () => {
+    tradingCycle();  // run one trading cycle immediately
+    showNotification('Refreshed prices');
+});
     // ----- Start everything when page loads -----
     window.addEventListener('load', () => {
         initChart();
