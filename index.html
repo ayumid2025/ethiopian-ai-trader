@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🇪🇹 Kid‑Friendly AI Trader – Ethiopia</title>
+    <!-- Chart.js for drawing charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Our own styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Notification pop-up (appears when money is sent) -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i> <span id="notificationMessage">Transfer complete</span>
+    </div>
+
+    <div class="dashboard">
+        <h1>
+            <i class="fas fa-robot"></i> Kid‑Friendly AI Trader – Ethiopia
+            <small>starts by itself · charts · pretend bank</small>
+        </h1>
+
+        <!-- Bank account section (pretend) -->
+        <div class="bank-section">
+            <div class="bank-header">
+                <i class="fas fa-university"></i> Your Ethiopian Bank Account (just for fun)
+            </div>
+            <div class="bank-details">
+                <div class="bank-field">
+                    <label>Bank</label>
+                    <select id="bankSelect">
+                        <option value="CBE">Commercial Bank of Ethiopia</option>
+                        <option value="Awash">Awash Bank</option>
+                        <option value="Dashen">Dashen Bank</option>
+                        <option value="Abay">Abay Bank</option>
+                        <option value="Bunna">Bunna Bank</option>
+                    </select>
+                </div>
+                <div class="bank-field">
+                    <label>Account Number</label>
+                    <input type="text" id="accountNumber" value="1000234567890">
+                </div>
+                <div class="bank-field">
+                    <label>Account Holder</label>
+                    <input type="text" id="accountHolder" value="Abebe Kebede">
+                </div>
+            </div>
+            <div class="bank-balance">
+                <span><i class="fas fa-coins"></i> Bank Balance:</span>
+                <span id="bankBalance">0.00 ETB</span>
+            </div>
+            <div class="bank-actions">
+                <button class="btn-bank" id="sendProfitBtn" disabled><i class="fas fa-paper-plane"></i> Send Profit to Bank</button>
+                <button class="btn-bank btn-withdraw" id="withdrawAllBtn" disabled><i class="fas fa-download"></i> Withdraw All Profit</button>
+            </div>
+            <div style="margin-top:1rem; display:flex; align-items:center; gap:10px;">
+                <label style="display:flex; align-items:center; gap:5px;">
+                    <input type="checkbox" id="autoSendToggle"> Auto‑send (every 200 ETB profit)
+                </label>
+            </div>
+            <!-- List of recent transfers -->
+            <div id="profitHistory" style="margin-top:1rem; background:#0f172a; border-radius:0.5rem; padding:0.5rem; max-height:80px; overflow-y:auto;">
+                <div style="color:#94a3b8;">Recent transfers will appear here</div>
+            </div>
+        </div>
+
+        <!-- Top summary cards -->
+        <div class="summary">
+            <div class="summary-card">
+                <div class="summary-label">Trading Cash (ETB)</div>
+                <div class="summary-value" id="totalCash">1,000.00</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Holdings Value</div>
+                <div class="summary-value" id="holdingsValue">0.00</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Total Portfolio</div>
+                <div class="summary-value" id="totalPortfolio">1,000.00</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Total Profit</div>
+                <div class="summary-value" id="profitLoss">0.00</div>
+            </div>
+        </div>
+
+        <!-- Stock cards (one for each company) -->
+        <div class="portfolio-grid" id="stockGrid"></div>
+
+        <!-- Chart area -->
+        <div class="chart-section">
+            <div class="chart-header">
+                <span><i class="fas fa-chart-line"></i> Price History (last 60 ticks)</span>
+                <select id="chartStockSelector">
+                    <option value="ETHTC">ETHTC (Ethio Telecom)</option>
+                    <option value="AWASH">AWASH (Awash Bank)</option>
+                    <option value="DASHEN">DASHEN (Dashen Bank)</option>
+                    <option value="CBE">CBE (Commercial Bank)</option>
+                    <option value="BGI">BGI (BGI Ethiopia)</option>
+                </select>
+            </div>
+            <canvas id="priceChart"></canvas>
+        </div>
+
+        <!-- Transaction log -->
+        <div class="log-section">
+            <div class="log-header">
+                <span><i class="fas fa-history"></i> Live Transaction Log</span>
+                <span class="badge" id="updateCounter">updates: 0</span>
+            </div>
+            <div class="log-container" id="logContainer">
+                <div class="log-entry header">
+                    <span>Stock</span>
+                    <span>Action</span>
+                    <span>Price (ETB)</span>
+                    <span>Time</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
