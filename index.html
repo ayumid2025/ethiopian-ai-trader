@@ -3,44 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🇪🇹 Kid‑Friendly AI Trader – Ethiopia</title>
-    <!-- Chart.js for drawing charts -->
+    <title>🇪🇹 Enhanced AI Trader – Ethiopia</title>
+    <!-- Chart.js for charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- Font Awesome for icons -->
+    <!-- Font Awesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Our own styles -->
+    <!-- Our custom styles -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Notification pop-up (appears when money is sent) -->
+    <!-- Notification pop-up -->
     <div class="notification" id="notification">
         <i class="fas fa-check-circle"></i> <span id="notificationMessage">Transfer complete</span>
     </div>
 
     <div class="dashboard">
         <h1>
-            <i class="fas fa-robot"></i> Kid‑Friendly AI Trader – Ethiopia
-            <small>starts by itself · charts · pretend bank</small>
+            <i class="fas fa-robot"></i> Enhanced AI Trader – Ethiopia
+            <small>starts by itself · charts · light/dark mode</small>
         </h1>
 
-        <!-- Bank account section (pretend) -->
+        <!-- Theme toggle -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+            <label class="switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider round"></span>
+            </label>
+            <span>Light Mode</span>
+        </div>
+
+        <!-- Bank account section -->
         <div class="bank-section">
             <div class="bank-header">
-                <i class="fas fa-university"></i> Your Ethiopian Bank Account (just for fun)
+                <i class="fas fa-university"></i> Your Ethiopian Bank Account (simulated)
             </div>
             <div class="bank-details">
                 <div class="bank-field">
                     <label>Bank</label>
                     <select id="bankSelect">
-                        <select id="chartStockSelector">
-                                <option value="ETHTC">ETHTC (Ethio Telecom)</option>
-                                <option value="AWASH">AWASH (Awash Bank)</option>
-                                <option value="DASHEN">DASHEN (Dashen Bank)</option>
-                                <option value="CBE">CBE (Commercial Bank)</option>
-                                <option value="BGI">BGI (BGI Ethiopia)</option>
-                                <option value="BERHAN">BERHAN (Berhan Bank)</option>
-                                <option value="ZEMEN">ZEMEN (Zemen Bank)</option>
-</select>
+                        <option value="CBE">Commercial Bank of Ethiopia</option>
+                        <option value="Awash">Awash Bank</option>
+                        <option value="Dashen">Dashen Bank</option>
+                        <option value="Abay">Abay Bank</option>
+                        <option value="Bunna">Bunna Bank</option>
+                        <option value="Berhan">Berhan Bank</option>
+                        <option value="Zemen">Zemen Bank</option>
                     </select>
                 </div>
                 <div class="bank-field">
@@ -57,15 +64,16 @@
                 <span id="bankBalance">0.00 ETB</span>
             </div>
             <div class="bank-actions">
-                <button class="btn-bank" id="sendProfitBtn" disabled><i class="fas fa-paper-plane"></i> Send Profit to Bank</button>
-                <button class="btn-bank btn-withdraw" id="withdrawAllBtn" disabled><i class="fas fa-download"></i> Withdraw All Profit</button>
+                <button class="btn-bank" id="sendProfitBtn" disabled><i class="fas fa-paper-plane"></i> Send Profit</button>
+                <button class="btn-bank btn-withdraw" id="withdrawAllBtn" disabled><i class="fas fa-download"></i> Withdraw All</button>
+                <button class="btn-bank" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh Now</button>
             </div>
             <div style="margin-top:1rem; display:flex; align-items:center; gap:10px;">
                 <label style="display:flex; align-items:center; gap:5px;">
                     <input type="checkbox" id="autoSendToggle"> Auto‑send (every 200 ETB profit)
                 </label>
             </div>
-            <!-- List of recent transfers -->
+            <!-- Recent transfers -->
             <div id="profitHistory" style="margin-top:1rem; background:#0f172a; border-radius:0.5rem; padding:0.5rem; max-height:80px; overflow-y:auto;">
                 <div style="color:#94a3b8;">Recent transfers will appear here</div>
             </div>
@@ -91,7 +99,7 @@
             </div>
         </div>
 
-        <!-- Stock cards (one for each company) -->
+        <!-- Stock cards grid -->
         <div class="portfolio-grid" id="stockGrid"></div>
 
         <!-- Chart area -->
@@ -104,6 +112,8 @@
                     <option value="DASHEN">DASHEN (Dashen Bank)</option>
                     <option value="CBE">CBE (Commercial Bank)</option>
                     <option value="BGI">BGI (BGI Ethiopia)</option>
+                    <option value="BERHAN">BERHAN (Berhan Bank)</option>
+                    <option value="ZEMEN">ZEMEN (Zemen Bank)</option>
                 </select>
             </div>
             <canvas id="priceChart"></canvas>
