@@ -1,13 +1,13 @@
 (function() {
-    // ========== STOCK LIST (including new ones) ==========
+    // ========== STOCK LIST (with sectors for future analysis) ==========
     const STOCKS = [
-        { symbol: 'ETHTC', name: 'Ethio Telecom', basePrice: 180 },
-        { symbol: 'AWASH', name: 'Awash Bank', basePrice: 220 },
-        { symbol: 'DASHEN', name: 'Dashen Bank', basePrice: 260 },
-        { symbol: 'CBE', name: 'Commercial Bank', basePrice: 310 },
-        { symbol: 'BGI', name: 'BGI Ethiopia', basePrice: 95 },
-        { symbol: 'BERHAN', name: 'Berhan Bank', basePrice: 145 },
-        { symbol: 'ZEMEN', name: 'Zemen Bank', basePrice: 130 }
+        { symbol: 'ETHTC', name: 'Ethio Telecom', basePrice: 180, sector: 'Telecom' },
+        { symbol: 'AWASH', name: 'Awash Bank', basePrice: 220, sector: 'Banking' },
+        { symbol: 'DASHEN', name: 'Dashen Bank', basePrice: 260, sector: 'Banking' },
+        { symbol: 'CBE', name: 'Commercial Bank', basePrice: 310, sector: 'Banking' },
+        { symbol: 'BGI', name: 'BGI Ethiopia', basePrice: 95, sector: 'Manufacturing' },
+        { symbol: 'BERHAN', name: 'Berhan Bank', basePrice: 145, sector: 'Banking' },
+        { symbol: 'ZEMEN', name: 'Zemen Bank', basePrice: 130, sector: 'Banking' }
     ];
 
     // ========== SETTINGS ==========
@@ -18,6 +18,9 @@
     const MAX_HISTORY = 60;
     const UPDATE_INTERVAL_MS = 8000;
     const AUTO_SEND_THRESHOLD = 200;
+
+    // ========== REAL DATA INTEGRATION FLAG ==========
+    let USE_REAL_DATA = false; // Set to true when you have Ts'ega API access
 
     // ========== STATE ==========
     let cash = 1000.0;                // trading account in ETB
@@ -31,6 +34,11 @@
     let lastPrices = {};                  // latest price per stock
     let updateCount = 0;                  // number of updates
     let lastProfitSent = 0;                // auto-send tracking
+
+    // Additional data for advanced analysis (placeholders for future use)
+    let volumes = {};                      // trading volumes if available
+    let rsiValues = {};                    // RSI per stock
+    let indicators = {};                   // store all indicators
 
     // ========== CHART ==========
     let chart;
@@ -57,11 +65,14 @@
     const accountNumber = document.getElementById('accountNumber');
     const accountHolder = document.getElementById('accountHolder');
     const themeToggle = document.getElementById('themeToggle');
+    const dataSourceSpan = document.getElementById('dataSource');
+    const toggleDataSourceBtn = document.getElementById('toggleDataSource');
 
-    // ========== INITIALISE PRICE HISTORIES ==========
+    // ========== INITIALISE PRICE HISTORIES (Simulated) ==========
     STOCKS.forEach(s => {
         holdings[s.symbol] = 0;
         avgBuyPrices[s.symbol] = 0;
+        volumes[s.symbol] = [];
         let price = s.basePrice;
         priceHistories[s.symbol] = [];
         for (let i = 0; i < 30; i++) {
@@ -87,12 +98,65 @@
         return sum / period;
     }
 
+    // Advanced indicators (placeholders for when real data arrives)
+    function calculateRSI(prices, period = 14) {
+        // RSI calculation would go here
+        return 50; // placeholder
+    }
+
     function showNotification(msg, isError = false) {
         notificationMsg.textContent = msg;
         notification.classList.add('show');
         if (isError) notification.classList.add('error');
         else notification.classList.remove('error');
         setTimeout(() => notification.classList.remove('show'), 4000);
+    }
+
+    // ========== REAL DATA FETCHING (Ts'ega Integration) ==========
+    async function fetchRealMarketData() {
+        // This is a placeholder for actual API call to Ts'ega portal
+        // When you get API access, replace with real endpoint and authentication
+        try {
+            // Example: const response = await fetch('https://csdtsega.nbe.gov.et/api/market-data', {
+            //     headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+            // });
+            // const data = await response.json();
+
+            // For now, we simulate a delay and throw an error to fall back to mock
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            throw new Error('Real data not configured'); // Remove this line when you have real API
+
+            // Once you have real data, update each stock's price:
+            // STOCKS.forEach(stock => {
+            //     const realPrice = data.prices.find(p => p.symbol === stock.symbol);
+            //     if (realPrice) {
+            //         priceHistories[stock.symbol].push(realPrice.price);
+            //         if (priceHistories[stock.symbol].length > MAX_HISTORY) {
+            //             priceHistories[stock.symbol].shift();
+            //         }
+            //         lastPrices[stock.symbol] = realPrice.price;
+            //         // Also capture volume if available
+            //         if (realPrice.volume) {
+            //             volumes[stock.symbol].push(realPrice.volume);
+            //         }
+            //     }
+            // });
+        } catch (error) {
+            console.error('Real data fetch failed:', error);
+            throw error; // Propagate to caller
+        }
+    }
+
+    // Fallback mock price generation
+    function generateMockPrices() {
+        STOCKS.forEach(s => {
+            const hist = priceHistories[s.symbol];
+            const last = hist.length > 0 ? hist[hist.length - 1] : s.basePrice;
+            const newPrice = generateNextPrice(last, s.basePrice);
+            hist.push(newPrice);
+            if (hist.length > MAX_HISTORY) hist.shift();
+            lastPrices[s.symbol] = newPrice;
+        });
     }
 
     // ========== BANK FUNCTIONS ==========
@@ -175,11 +239,11 @@
             cash, bankBalance, holdings, avgBuyPrices, transactions, profitTransfers,
             priceHistories, smaHistories, lastPrices, updateCount, lastProfitSent
         };
-        localStorage.setItem('enhancedTrader', JSON.stringify(state));
+        localStorage.setItem('esxReadyTrader', JSON.stringify(state));
     }
 
     function loadState() {
-        const saved = localStorage.getItem('enhancedTrader');
+        const saved = localStorage.getItem('esxReadyTrader');
         if (saved) {
             try {
                 const state = JSON.parse(saved);
@@ -245,32 +309,60 @@
         });
     }
 
-    // ========== TRADING ENGINE ==========
-    function tradingCycle() {
+    // ========== TRADING ENGINE (uses either real or mock data) ==========
+    async function tradingCycle() {
         updateCount++;
         updateCounter.textContent = `updates: ${updateCount}`;
 
-        // Update prices
+        try {
+            if (USE_REAL_DATA) {
+                // Attempt to fetch real market data
+                await fetchRealMarketData();
+                dataSourceSpan.textContent = 'ESX (Real)';
+                dataSourceSpan.style.color = '#4ade80';
+            } else {
+                // Use simulated prices
+                generateMockPrices();
+                dataSourceSpan.textContent = 'Simulated';
+                dataSourceSpan.style.color = '#94a3b8';
+            }
+        } catch (error) {
+            // Fallback to simulation if real data fails
+            console.warn('Falling back to simulated data');
+            generateMockPrices();
+            dataSourceSpan.textContent = 'Simulated (Fallback)';
+            dataSourceSpan.style.color = '#f87171';
+        }
+
+        // Update SMAs for all stocks
         STOCKS.forEach(s => {
-            const hist = priceHistories[s.symbol];
-            const last = hist.length > 0 ? hist[hist.length - 1] : s.basePrice;
-            const newPrice = generateNextPrice(last, s.basePrice);
-            hist.push(newPrice);
-            if (hist.length > MAX_HISTORY) hist.shift();
-            lastPrices[s.symbol] = newPrice;
+            const symbol = s.symbol;
+            const hist = priceHistories[symbol];
+            const sma = calculateSMA(hist, SMA_PERIOD);
+            if (sma !== null) {
+                let smaHist = smaHistories[symbol];
+                smaHist.push(sma);
+                if (smaHist.length > MAX_HISTORY) smaHist.shift();
+            }
         });
 
-        // Trading decisions
+        // Make trading decisions based on latest prices
+        makeTradingDecisions();
+
+        checkAutoSend();
+        if (transactions.length > 100) transactions = transactions.slice(-100);
+        saveState();
+        renderUI();
+        updateChart();
+    }
+
+    function makeTradingDecisions() {
         STOCKS.forEach(s => {
             const symbol = s.symbol;
             const price = lastPrices[symbol];
             const hist = priceHistories[symbol];
             const sma = calculateSMA(hist, SMA_PERIOD);
             if (sma === null) return;
-
-            let smaHist = smaHistories[symbol];
-            smaHist.push(sma);
-            if (smaHist.length > MAX_HISTORY) smaHist.shift();
 
             let shares = holdings[symbol] || 0;
 
@@ -313,12 +405,6 @@
                 avgBuyPrices[symbol] = 0;
             }
         });
-
-        checkAutoSend();
-        if (transactions.length > 100) transactions = transactions.slice(-100);
-        saveState();
-        renderUI();
-        updateChart();
     }
 
     // ========== RENDER UI ==========
@@ -471,6 +557,15 @@
         } else {
             document.body.classList.remove('light-mode');
         }
+    });
+
+    // Toggle data source (real/simulated)
+    toggleDataSourceBtn.addEventListener('click', () => {
+        USE_REAL_DATA = !USE_REAL_DATA;
+        toggleDataSourceBtn.textContent = USE_REAL_DATA ? 'Switch to Simulated' : 'Switch to Real (ESX)';
+        showNotification(`Switched to ${USE_REAL_DATA ? 'real' : 'simulated'} data mode`);
+        // Force an immediate update to reflect new data source
+        tradingCycle();
     });
 
     // ========== START EVERYTHING ==========
