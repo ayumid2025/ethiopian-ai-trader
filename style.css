@@ -46,6 +46,26 @@ h1 small {
     margin-left: auto;
 }
 
+/* ========== DATA SOURCE BADGE ========== */
+.data-source-badge {
+    background: #1e293b;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+.btn-small {
+    background: #334155;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.3rem 0.8rem;
+    color: white;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
 /* ========== LIGHT MODE ========== */
 body.light-mode {
     background: linear-gradient(145deg, #f0f4f8 0%, #d9e2ec 100%);
@@ -89,6 +109,10 @@ body.light-mode .log-entry {
 }
 body.light-mode .log-entry.header {
     color: #475569;
+}
+body.light-mode .data-source-badge {
+    background: #e2e8f0;
+    color: #1e293b;
 }
 
 /* ========== BANK SECTION ========== */
