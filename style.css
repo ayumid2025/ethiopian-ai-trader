@@ -1,415 +1,66 @@
-/* ========== BASE STYLES ========== */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: linear-gradient(145deg, #0b1120 0%, #1a2639 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
     padding: 20px;
-    color: #e2e8f0;
-    transition: background 0.3s, color 0.3s;
 }
-
-.dashboard {
-    max-width: 1600px;
-    width: 100%;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 2rem;
-    padding: 2rem;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7);
-    border: 1px solid #334155;
-    transition: background 0.3s, border-color 0.3s;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
 }
-
-h1 {
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
+h1, h2 { color: #333; margin-bottom: 15px; }
+.balance, .market {
+    background: #e9ecef;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: #f1f5f9;
+    gap: 20px;
     flex-wrap: wrap;
 }
-h1 i { color: #fbbf24; font-size: 2rem; }
-h1 small {
-    font-size: 1rem;
-    font-weight: 400;
-    color: #94a3b8;
-    margin-left: auto;
-}
-
-/* ========== DATA SOURCE BADGE ========== */
-.data-source-badge {
-    background: #1e293b;
-    padding: 0.5rem 1rem;
-    border-radius: 2rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9rem;
-}
-.btn-small {
-    background: #334155;
-    border: none;
-    border-radius: 2rem;
-    padding: 0.3rem 0.8rem;
-    color: white;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-
-/* ========== LIGHT MODE ========== */
-body.light-mode {
-    background: linear-gradient(145deg, #f0f4f8 0%, #d9e2ec 100%);
-    color: #1e293b;
-}
-body.light-mode .dashboard {
-    background: rgba(255,255,255,0.9);
-    border-color: #cbd5e1;
-}
-body.light-mode .bank-section,
-body.light-mode .stock-card,
-body.light-mode .chart-section,
-body.light-mode .log-section {
-    background: #ffffff;
-    border-color: #cbd5e1;
-}
-body.light-mode .bank-balance {
-    background: #f1f5f9;
-}
-body.light-mode .bank-balance span:last-child {
-    color: #f59e0b;
-}
-body.light-mode .btn-bank {
-    color: #1e293b;
-}
-body.light-mode .btn-bank:disabled {
-    opacity: 0.5;
-}
-body.light-mode .summary-card {
-    background: #ffffff;
-    border-color: #cbd5e1;
-}
-body.light-mode .summary-value {
-    color: #f59e0b;
-}
-body.light-mode .log-container {
-    background: #f1f5f9;
-}
-body.light-mode .log-entry {
-    border-bottom-color: #cbd5e1;
-}
-body.light-mode .log-entry.header {
-    color: #475569;
-}
-body.light-mode .data-source-badge {
-    background: #e2e8f0;
-    color: #1e293b;
-}
-
-/* ========== BANK SECTION ========== */
-.bank-section {
-    background: #1e293b;
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border: 1px solid #38bdf8;
-    transition: background 0.3s, border-color 0.3s;
-}
-.bank-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #38bdf8;
-    margin-bottom: 1rem;
+.balance p, .market p {
     font-size: 1.2rem;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-.bank-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
+.holdings table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
-.bank-field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+.holdings th, .holdings td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: right;
 }
-.bank-field label {
-    font-size: 0.85rem;
-    color: #94a3b8;
-}
-.bank-field input, .bank-field select {
-    background: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 0.75rem;
-    padding: 0.6rem 1rem;
-    color: #f8fafc;
-    outline: none;
-}
-.bank-field input:focus, .bank-field select:focus {
-    border-color: #38bdf8;
-}
-.bank-balance {
-    background: #0f172a;
-    border-radius: 1rem;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #fbbf24;
-    margin-bottom: 1rem;
-}
-.bank-balance span:first-child { color: #94a3b8; }
-.bank-balance span:last-child { font-size: 1.8rem; font-weight: bold; color: #fbbf24; }
-.bank-actions {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-.btn-bank {
-    background: linear-gradient(135deg, #059669, #10b981);
-    border: none;
-    border-radius: 2rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    color: white;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.2s;
-}
-.btn-bank:hover { transform: translateY(-2px); box-shadow: 0 4px 15px -3px #10b98180; }
-.btn-bank:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-withdraw { background: linear-gradient(135deg, #b45309, #d97706); }
-
-/* ========== SUMMARY CARDS ========== */
-.summary {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-.summary-card {
-    background: #1e293b;
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    border: 1px solid #334155;
-}
-.summary-label {
-    font-size: 0.9rem;
-    color: #94a3b8;
-    text-transform: uppercase;
-}
-.summary-value {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-top: 0.25rem;
-    color: #fbbf24;
-}
-
-/* ========== STOCK CARDS ========== */
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-.stock-card {
-    background: #1e293b;
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    border: 1px solid #334155;
-    transition: transform 0.2s, border-color 0.2s;
-}
-.stock-card:hover { border-color: #fbbf24; transform: translateY(-4px); }
-.stock-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-.stock-symbol {
-    font-size: 1.5rem;
-    font-weight: 700;
-    background: #0f172a;
-    padding: 0.25rem 1rem;
-    border-radius: 2rem;
-    color: #fbbf24;
-}
-.stock-price {
-    font-size: 1.8rem;
-    font-weight: 700;
-}
-.stock-detail {
-    display: flex;
-    justify-content: space-between;
-    margin: 0.5rem 0;
-    color: #cbd5e1;
-}
-.stock-detail span:first-child { color: #94a3b8; }
-.indicator {
-    display: inline-block;
-    width: 10px; height: 10px; border-radius: 50%; margin-right: 6px;
-}
-.buy-signal { background: #4ade80; }
-.sell-signal { background: #f87171; }
-.neutral-signal { background: #94a3b8; }
-
-/* ========== CHART SECTION ========== */
-.chart-section {
-    background: #1e293b;
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
-    border: 1px solid #334155;
-}
-.chart-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-.chart-header select {
-    background: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 2rem;
-    padding: 0.5rem 1rem;
-    color: white;
-}
-canvas { width: 100%; height: 250px; }
-
-/* ========== TRANSACTION LOG ========== */
-.log-section {
-    background: #1e293b;
-    border-radius: 1.5rem;
-    padding: 1.5rem;
-    border: 1px solid #334155;
-}
-.log-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    color: #94a3b8;
-}
-.log-container {
-    max-height: 250px;
+.holdings th { background: #007bff; color: white; text-align: center; }
+.log {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 200px;
     overflow-y: auto;
-    background: #0f172a;
-    border-radius: 1rem;
-    padding: 0.5rem;
-    font-family: 'Fira Code', monospace;
-    font-size: 0.9rem;
+    margin-bottom: 20px;
 }
-.log-entry {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1.5fr 2fr;
-    padding: 0.5rem 0.75rem;
-    border-bottom: 1px solid #1e293b;
-}
-.log-entry.header {
-    color: #64748b;
-    font-weight: 600;
-    border-bottom: 2px solid #334155;
-}
-.buy-log { color: #4ade80; }
-.sell-log { color: #f87171; }
-.profit-log { color: #fbbf24; }
-
-.badge {
-    background: #334155;
-    padding: 0.25rem 0.75rem;
-    border-radius: 2rem;
-    font-size: 0.85rem;
-}
-
-/* ========== NOTIFICATION ========== */
-.notification {
-    position: fixed;
-    top: 20px; right: 20px;
-    background: #10b981;
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 1rem;
-    transform: translateX(400px);
-    transition: transform 0.3s;
-    z-index: 1000;
-    border-left: 4px solid #fbbf24;
-}
-.notification.show { transform: translateX(0); }
-.notification.error { background: #b91c1c; }
-
-/* ========== TOGGLE SWITCH ========== */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-.switch input { opacity: 0; width: 0; height: 0; }
-.slider {
-    position: absolute;
+.log div { border-bottom: 1px solid #ccc; padding: 5px; font-size: 0.9rem; }
+.controls button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #334155;
-    transition: .4s;
-    border-radius: 34px;
 }
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px; width: 26px;
-    left: 4px; bottom: 4px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-}
-input:checked + .slider { background-color: #10b981; }
-input:checked + .slider:before { transform: translateX(26px); }
-.slider.round { border-radius: 34px; }
-
-/* ========== MOBILE RESPONSIVE ========== */
+#startBtn { background: #28a745; color: white; }
+#stopBtn { background: #dc3545; color: white; }
+#resetBtn { background: #ffc107; }
 @media (max-width: 600px) {
-    .dashboard {
-        padding: 1rem;
-    }
-    h1 {
-        font-size: 1.5rem;
-    }
-    h1 small {
-        margin-left: 0;
-        width: 100%;
-        font-size: 0.9rem;
-    }
-    .summary {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .bank-details {
-        grid-template-columns: 1fr;
-    }
-    .bank-actions {
-        flex-direction: column;
-    }
-    .btn-bank {
-        width: 100%;
-    }
-    .stock-card {
-        padding: 1rem;
-    }
-    .stock-price {
-        font-size: 1.5rem;
-    }
-    .log-entry {
-        font-size: 0.8rem;
-        grid-template-columns: 0.8fr 1.5fr 1.2fr 1.5fr;
-    }
+    .balance, .market { flex-direction: column; gap: 10px; }
+    .controls button { width: 100%; margin-bottom: 10px; }
 }
