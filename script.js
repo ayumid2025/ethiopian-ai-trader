@@ -8,6 +8,8 @@
         { symbol: 'DASHEN', name: 'Dashen Bank', basePrice: 260 },
         { symbol: 'CBE', name: 'Commercial Bank', basePrice: 310 },
         { symbol: 'BGI', name: 'BGI Ethiopia', basePrice: 95 }
+        { symbol: 'BERHAN', name: 'Berhan Bank', basePrice: 145 },
+        { symbol: 'ZEMEN', name: 'Zemen Bank', basePrice: 130 }
     ];
 
     // ----- Settings you can change -----
